@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   resources :food_orders
   resources :food_items
   resources :bookings
