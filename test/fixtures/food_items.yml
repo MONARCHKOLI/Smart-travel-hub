@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  motel: one
+  name: MyString
+  price: 9.99
+  prep_time_minutes: 1
+
+two:
+  motel: two
+  name: MyString
+  price: 9.99
+  prep_time_minutes: 1
