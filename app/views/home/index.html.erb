@@ -1,5 +1,4 @@
 <div class="min-h-[85vh] flex items-center justify-center">
-  
   <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
     
     <!-- Left Content -->
@@ -14,75 +13,76 @@
       </h1>
 
       <p class="mt-6 text-lg text-gray-600 leading-relaxed">
-        Discover amazing motels, manage bookings easily,
-        and explore smart travel experiences.
-        Weather insights and Face Lock features are coming soon.
+        Discover amazing motels, manage bookings easily, and explore smart travel experiences with real-time weather and biometric security.
       </p>
 
       <!-- Buttons -->
       <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-        
         <%= link_to "Explore Motels", motels_path,
           class: "bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl shadow-lg transition duration-300 text-center font-semibold" %>
 
         <% if user_signed_in? %>
           <%= link_to "My Bookings", bookings_path,
             class: "bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl shadow-lg transition duration-300 text-center font-semibold" %>
+          <%= button_to "Logout", destroy_user_session_path, method: :delete,
+            class: "bg-red-50 hover:bg-red-100 text-red-600 px-8 py-3 rounded-xl transition duration-300 text-center font-semibold border border-red-200" %>
         <% else %>
-          <%= link_to "Login", new_user_session_path,
+          <%= link_to "Login with Face ID", new_user_session_path,
             class: "bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-xl shadow-lg transition duration-300 text-center font-semibold" %>
         <% end %>
-
       </div>
     </div>
 
-    <!-- Right Card -->
+    <!-- Right Card (Live Data Integration) -->
     <div class="relative">
       <div class="bg-white/70 backdrop-blur-lg border border-white/50 rounded-3xl shadow-2xl p-8">
-        
         <div class="space-y-6">
           
-          <div class="flex items-center gap-4">
-            <div class="bg-blue-100 p-4 rounded-2xl text-2xl">
-              🏨
-            </div>
-
-            <div>
-              <h3 class="text-xl font-bold text-gray-800">
-                Find Premium Motels
-              </h3>
-              <p class="text-gray-500">
-                Browse and book comfortable stays instantly.
-              </p>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-4">
-            <div class="bg-green-100 p-4 rounded-2xl text-2xl">
-              📅
-            </div>
-
-            <div>
-              <h3 class="text-xl font-bold text-gray-800">
-                Easy Booking
-              </h3>
-              <p class="text-gray-500">
-                Manage your travel plans in one place.
-              </p>
-            </div>
-          </div>
-
+          <!-- Live Weather Item -->
           <div class="flex items-center gap-4">
             <div class="bg-purple-100 p-4 rounded-2xl text-2xl">
               🌤️
             </div>
-
             <div>
               <h3 class="text-xl font-bold text-gray-800">
-                Weather Updates
+                <% if @weather && @weather["hours"] %>
+                  <%= @weather["hours"][0]["airTemperature"]["noaa"].round %>°C in <%= @weather["name"] %>
+                <% else %>
+                  Weather Updates
+                <% end %>
+              </h3>
+              <p class="text-gray-500 capitalize">
+                Planning your trip based on local climate.
+              </p>
+            </div>
+          </div>
+
+          <!-- Face Lock Status Item -->
+          <div class="flex items-center gap-4">
+            <div class="bg-blue-100 p-4 rounded-2xl text-2xl">
+              <%= user_signed_in? ? "🔓" : "🔒" %>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-gray-800">
+                Biometric Security
+              </h3>
+              <p class="<%= user_signed_in? ? 'text-green-600' : 'text-blue-500' %> font-medium">
+                <%= user_signed_in? ? "Authenticated as #{current_user.email}" : "Face Lock Active (2 Attempts Max)" %>
+              </p>
+            </div>
+          </div>
+
+          <!-- Booking Status Item -->
+          <div class="flex items-center gap-4">
+            <div class="bg-green-100 p-4 rounded-2xl text-2xl">
+              🏨
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-gray-800">
+                Premium Stays
               </h3>
               <p class="text-gray-500">
-                Smart weather-based travel planning coming soon.
+                Browse and book comfortable stays instantly.
               </p>
             </div>
           </div>
@@ -97,3 +97,28 @@
 
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    if (navigator.geolocation) {
+
+      navigator.geolocation.getCurrentPosition((position) => {
+
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        const currentUrl = new URL(window.location.href);
+
+        if (!currentUrl.searchParams.get("lat")) {
+
+          currentUrl.searchParams.set("lat", lat);
+          currentUrl.searchParams.set("lng", lng);
+
+          window.location.href = currentUrl.toString();
+        }
+
+      });
+
+    }
+  });
+</script>
