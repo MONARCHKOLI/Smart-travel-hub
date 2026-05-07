@@ -2,30 +2,94 @@
 <html>
   <head>
     <title><%= content_for(:title) || "Smart Travel Hub" %></title>
+
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Smart Travel Hub">
     <meta name="mobile-web-app-capable" content="yes">
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
-      <%= yield %>
+  <body class="bg-gradient-to-br from-sky-100 via-white to-blue-200 min-h-screen text-gray-800">
+    
+    <!-- Navbar -->
+    <header class="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md shadow-md z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+
+          <!-- Logo -->
+          <div class="flex items-center gap-2">
+            <div class="bg-blue-600 text-white p-2 rounded-xl shadow">
+              ✈️
+            </div>
+
+            <h1 class="text-xl sm:text-2xl font-bold text-blue-700">
+              Smart Travel Hub
+            </h1>
+          </div>
+
+          <!-- Navigation -->
+          <nav class="flex items-center gap-3 sm:gap-5">
+
+            <% if user_signed_in? %>
+
+              <%= link_to "Home", authenticated_root_path,
+                class: "text-gray-700 hover:text-blue-600 font-medium transition" %>
+                
+              <%= link_to "Motels", motels_path,
+                class: "text-gray-700 hover:text-blue-600 font-medium transition" %>
+                
+              <%= link_to "Bookings", bookings_path,
+                class: "text-gray-700 hover:text-blue-600 font-medium transition" %>
+                
+              <%= link_to "Logout",
+                destroy_user_session_path,
+                data: { turbo_method: :delete },
+                class: "bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow transition" %>
+                
+            <% else %>
+                
+              <%= link_to "Login",
+                new_user_session_path,
+                class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition" %>
+                
+            <% end %>
+                
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-24 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto">
+
+        <% flash.each do |type, message| %>
+          <div class="max-w-4xl mx-auto mt-4">
+
+            <div class="
+              px-4 py-3 rounded-xl shadow-lg text-white
+              <%= type == 'notice' ? 'bg-green-500' : 'bg-red-500' %>
+            ">
+              <%= message %>
+            </div>
+
+          </div>
+        <% end %>
+        <%= yield %>
+      </div>
     </main>
+
   </body>
 </html>

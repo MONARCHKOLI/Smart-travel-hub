@@ -1,13 +1,99 @@
-<div class="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
-  <h1 class="text-4xl font-bold text-blue-600 mb-4">Smart Travel Hub</h1>
-  <p class="text-gray-600 mb-8">Welcome! Weather and Face Lock are coming soon.</p>
+<div class="min-h-[85vh] flex items-center justify-center">
   
-  <div class="space-x-4">
-    <%= link_to "View Motels", motels_path, class: "bg-blue-500 text-white px-6 py-2 rounded-lg shadow" %>
-    <% if user_signed_in? %>
-      <%= link_to "My Bookings", bookings_path, class: "bg-green-500 text-white px-6 py-2 rounded-lg shadow" %>
-    <% else %>
-      <%= link_to "Login", new_user_session_path, class: "bg-gray-800 text-white px-6 py-2 rounded-lg shadow" %>
-    <% end %>
+  <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+    
+    <!-- Left Content -->
+    <div class="text-center md:text-left">
+      <span class="inline-block bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-sm font-semibold mb-4">
+        Travel Smarter ✈️
+      </span>
+
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight">
+        Welcome to
+        <span class="text-blue-600">Smart Travel Hub</span>
+      </h1>
+
+      <p class="mt-6 text-lg text-gray-600 leading-relaxed">
+        Discover amazing motels, manage bookings easily,
+        and explore smart travel experiences.
+        Weather insights and Face Lock features are coming soon.
+      </p>
+
+      <!-- Buttons -->
+      <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+        
+        <%= link_to "Explore Motels", motels_path,
+          class: "bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl shadow-lg transition duration-300 text-center font-semibold" %>
+
+        <% if user_signed_in? %>
+          <%= link_to "My Bookings", bookings_path,
+            class: "bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl shadow-lg transition duration-300 text-center font-semibold" %>
+        <% else %>
+          <%= link_to "Login", new_user_session_path,
+            class: "bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-xl shadow-lg transition duration-300 text-center font-semibold" %>
+        <% end %>
+
+      </div>
+    </div>
+
+    <!-- Right Card -->
+    <div class="relative">
+      <div class="bg-white/70 backdrop-blur-lg border border-white/50 rounded-3xl shadow-2xl p-8">
+        
+        <div class="space-y-6">
+          
+          <div class="flex items-center gap-4">
+            <div class="bg-blue-100 p-4 rounded-2xl text-2xl">
+              🏨
+            </div>
+
+            <div>
+              <h3 class="text-xl font-bold text-gray-800">
+                Find Premium Motels
+              </h3>
+              <p class="text-gray-500">
+                Browse and book comfortable stays instantly.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <div class="bg-green-100 p-4 rounded-2xl text-2xl">
+              📅
+            </div>
+
+            <div>
+              <h3 class="text-xl font-bold text-gray-800">
+                Easy Booking
+              </h3>
+              <p class="text-gray-500">
+                Manage your travel plans in one place.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <div class="bg-purple-100 p-4 rounded-2xl text-2xl">
+              🌤️
+            </div>
+
+            <div>
+              <h3 class="text-xl font-bold text-gray-800">
+                Weather Updates
+              </h3>
+              <p class="text-gray-500">
+                Smart weather-based travel planning coming soon.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Decorative Glow -->
+      <div class="absolute -z-10 -top-6 -right-6 w-40 h-40 bg-blue-300 rounded-full blur-3xl opacity-30"></div>
+      <div class="absolute -z-10 -bottom-6 -left-6 w-40 h-40 bg-purple-300 rounded-full blur-3xl opacity-30"></div>
+    </div>
+
   </div>
 </div>
