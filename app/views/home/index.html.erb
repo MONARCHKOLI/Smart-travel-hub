@@ -1,0 +1,13 @@
+<div class="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
+  <h1 class="text-4xl font-bold text-blue-600 mb-4">Smart Travel Hub</h1>
+  <p class="text-gray-600 mb-8">Welcome! Weather and Face Lock are coming soon.</p>
+  
+  <div class="space-x-4">
+    <%= link_to "View Motels", motels_path, class: "bg-blue-500 text-white px-6 py-2 rounded-lg shadow" %>
+    <% if user_signed_in? %>
+      <%= link_to "My Bookings", bookings_path, class: "bg-green-500 text-white px-6 py-2 rounded-lg shadow" %>
+    <% else %>
+      <%= link_to "Login", new_user_session_path, class: "bg-gray-800 text-white px-6 py-2 rounded-lg shadow" %>
+    <% end %>
+  </div>
+</div>
