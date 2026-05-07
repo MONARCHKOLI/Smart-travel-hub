@@ -3,9 +3,7 @@ Rails.application.routes.draw do
     sessions: "users/sessions"
   }
   
-  authenticated :user do
-    root "home#index", as: :authenticated_root
-  end
+  root "home#index"
 
   unauthenticated do
     root "devise/sessions#new", as: :unauthenticated_root
