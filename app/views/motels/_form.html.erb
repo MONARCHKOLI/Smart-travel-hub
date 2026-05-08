@@ -1,42 +1,145 @@
-<%= form_with(model: motel, class: "contents") do |form| %>
-  <% if motel.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
-      <h2><%= pluralize(motel.errors.count, "error") %> prohibited this motel from being saved:</h2>
+<%= form_with(model: motel, class: "space-y-7") do |f| %>
 
-      <ul class="list-disc ml-6">
-        <% motel.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+  <!-- Errors -->
+  <% if motel.errors.any? %>
+
+    <div class="bg-red-50 border border-red-200 rounded-2xl p-5">
+
+      <h2 class="text-red-600 font-bold mb-3">
+        Please fix the following:
+      </h2>
+
+      <ul class="space-y-2 text-sm text-red-500">
+        <% motel.errors.full_messages.each do |message| %>
+          <li>• <%= message %></li>
         <% end %>
       </ul>
+
     </div>
+
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :name %>
-    <%= form.text_field :name, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": motel.errors[:name].none?, "border-red-400 focus:outline-red-600": motel.errors[:name].any?}] %>
+  <!-- Name -->
+  <div>
+
+    <%= f.label :name,
+      class: "block text-sm font-bold text-gray-700 mb-3" %>
+
+    <%= f.text_field :name,
+      placeholder: "Enter motel name",
+      class: "w-full rounded-2xl border border-gray-200 px-5 py-4 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition" %>
+
   </div>
 
-  <div class="my-5">
-    <%= form.label :address %>
-    <%= form.text_field :address, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": motel.errors[:address].none?, "border-red-400 focus:outline-red-600": motel.errors[:address].any?}] %>
+  <!-- Address -->
+  <div>
+
+    <%= f.label :address,
+      class: "block text-sm font-bold text-gray-700 mb-3" %>
+
+    <%= f.text_field :address,
+      placeholder: "Enter motel location/address",
+      class: "w-full rounded-2xl border border-gray-200 px-5 py-4 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition" %>
+
   </div>
 
-  <div class="my-5">
-    <%= form.label :lat %>
-    <%= form.text_field :lat, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": motel.errors[:lat].none?, "border-red-400 focus:outline-red-600": motel.errors[:lat].any?}] %>
+  <!-- Description -->
+  <div>
+
+    <%= f.label :description,
+      class: "block text-sm font-bold text-gray-700 mb-3" %>
+
+    <%= f.text_area :description,
+      rows: 5,
+      placeholder: "Describe the motel experience...",
+      class: "w-full rounded-2xl border border-gray-200 px-5 py-4 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition resize-none" %>
+
   </div>
 
-  <div class="my-5">
-    <%= form.label :lon %>
-    <%= form.text_field :lon, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": motel.errors[:lon].none?, "border-red-400 focus:outline-red-600": motel.errors[:lon].any?}] %>
+  <!-- Coordinates -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+    <div>
+
+      <%= f.label :lat,
+        "Latitude",
+        class: "block text-sm font-bold text-gray-700 mb-3" %>
+
+      <%= f.number_field :lat,
+        step: :any,
+        placeholder: "e.g. 22.7196",
+        class: "w-full rounded-2xl border border-gray-200 px-5 py-4 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition" %>
+
+    </div>
+
+    <div>
+
+      <%= f.label :lon,
+        "Longitude",
+        class: "block text-sm font-bold text-gray-700 mb-3" %>
+
+      <%= f.number_field :lon,
+        step: :any,
+        placeholder: "e.g. 75.8577",
+        class: "w-full rounded-2xl border border-gray-200 px-5 py-4 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition" %>
+
+    </div>
+
   </div>
 
-  <div class="my-5">
-    <%= form.label :description %>
-    <%= form.textarea :description, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": motel.errors[:description].none?, "border-red-400 focus:outline-red-600": motel.errors[:description].any?}] %>
+  <!-- Image -->
+  <div>
+
+    <%= f.label :image,
+      "Motel Image",
+      class: "block text-sm font-bold text-gray-700 mb-3" %>
+
+    <div class="border-2 border-dashed border-gray-200 rounded-3xl p-6 bg-gray-50">
+
+      <%= f.file_field :image,
+        class: "w-full text-sm text-gray-500
+        file:mr-4
+        file:py-3
+        file:px-6
+        file:rounded-2xl
+        file:border-0
+        file:text-sm
+        file:font-bold
+        file:bg-blue-600
+        file:text-white
+        hover:file:bg-blue-700
+        cursor-pointer" %>
+
+      <p class="text-xs text-gray-400 mt-3">
+        Upload high-quality motel cover image
+      </p>
+
+    </div>
+
   </div>
 
-  <div class="inline">
-    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  <!-- Current Image -->
+  <% if motel.image.attached? %>
+
+    <div>
+
+      <p class="text-sm font-bold text-gray-700 mb-3">
+        Current Image
+      </p>
+
+      <%= image_tag motel.image,
+        class: "w-full h-64 object-cover rounded-3xl shadow-lg border border-gray-100" %>
+
+    </div>
+
+  <% end %>
+
+  <!-- Buttons -->
+  <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-4 pt-6">
+      
+    <%= f.submit motel.persisted? ? "Update Motel" : "Save Motel",
+      class: "inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-2xl font-bold shadow-lg hover:shadow-xl transition duration-300 cursor-pointer" %>
+      
   </div>
+
 <% end %>
