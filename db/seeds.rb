@@ -7,3 +7,58 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+
+require "open-uri"
+
+Motel.destroy_all
+
+motels = [
+  {
+    name: "Blue Horizon Resort",
+    address: "Goa",
+    description: "Luxury beach resort",
+    lat: 15.2993,
+    lon: 74.1240,
+    image_url: "https://images.unsplash.com/photo-1566073771259-6a8506099945"
+  },
+  {
+    name: "The Pine Lodge",
+    address: "Manali",
+    description: "Mountain view stay",
+    lat: 32.2432,
+    lon: 77.1892,
+    image_url: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+  },
+  {
+    name: "Urban Oasis Motel",
+    address: "Mumbai",
+    description: "Modern city motel",
+    lat: 19.0760,
+    lon: 72.8777,
+    image_url: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa"
+  }
+]
+
+motels.each do |data|
+
+  motel = Motel.create!(
+    name: data[:name],
+    address: data[:address],
+    description: data[:description],
+    lat: data[:lat],
+    lon: data[:lon]
+  )
+
+  file = URI.open(data[:image_url])
+
+  motel.image.attach(
+    io: file,
+    filename: "#{motel.name.parameterize}.jpg"
+  )
+
+  puts "✅ Created #{motel.name}"
+
+end
+
+

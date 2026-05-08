@@ -1,29 +1,163 @@
-<% content_for :title, "Motels" %>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-<div class="w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
-  <% end %>
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 mb-10">
 
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">Motels</h1>
-    <%= link_to "New motel", new_motel_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
-  </div>
+    <div>
+      <h1 class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">
+        Explore Motels
+      </h1>
 
-  <div id="motels" class="min-w-full divide-y divide-gray-200 space-y-5">
-    <% if @motels.any? %>
-      <% @motels.each do |motel| %>
-        <div class="flex flex-col sm:flex-row justify-between items-center pb-5 sm:pb-0">
-          <%= render motel %>
-          <div class="w-full sm:w-auto flex flex-col sm:flex-row space-x-2 space-y-2">
-            <%= link_to "Show", motel, class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <%= link_to "Edit", edit_motel_path(motel), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <%= button_to "Destroy", motel, method: :delete, class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
-          </div>
-        </div>
-      <% end %>
-    <% else %>
-      <p class="text-center my-10">No motels found.</p>
+      <p class="text-gray-500 mt-2 text-base">
+        Discover premium stays with smart travel experiences.
+      </p>
+    </div>
+
+    <% if user_signed_in? %>
+      <%= link_to 'Add New Motel',
+        new_motel_path,
+        class: "inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 transition duration-300 text-white px-6 py-3 rounded-2xl text-sm font-bold shadow-xl hover:shadow-2xl hover:-translate-y-0.5" %>
     <% end %>
+
   </div>
+
+  <!-- Motel Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+    <% @motels.each do |motel| %>
+
+      <div class="group bg-white/80 backdrop-blur-xl rounded-[28px] overflow-hidden border border-gray-100 shadow-md hover:shadow-2xl transition-all duration-500">
+
+        <!-- Image -->
+        <div class="relative h-60 overflow-hidden">
+
+          <% if motel.image.attached? %>
+
+            <%= image_tag motel.image,
+              class: "w-full h-full object-cover group-hover:scale-110 transition duration-700" %>
+
+          <% else %>
+
+            <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+              <span class="text-5xl">
+                🏨
+              </span>
+            </div>
+
+          <% end %>
+
+          <!-- Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+
+          <!-- Motel Name -->
+          <div class="absolute bottom-5 left-5 right-5">
+
+            <h2 class="text-white text-2xl font-black leading-tight drop-shadow-lg">
+              <%= motel.name %>
+            </h2>
+
+          </div>
+
+          <!-- Weather -->
+          <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-2 rounded-2xl shadow-lg border border-white/50 flex items-center gap-2">
+
+            <span class="text-sm">
+              🌤️
+            </span>
+
+            <span class="text-xs font-bold text-gray-800">
+
+              <% if @weather.present? &&
+                    @weather["hours"].present? &&
+                    @weather["hours"][0].present? %>
+
+                <%= @weather.dig("hours", 0, "airTemperature", "noaa").round %>°C
+
+              <% else %>
+
+                24°C
+
+              <% end %>
+
+            </span>
+
+          </div>
+
+        </div>
+
+        <!-- Content -->
+        <div class="p-6">
+
+          <!-- Address -->
+          <div class="flex items-start gap-3 mb-5">
+
+            <div class="bg-red-50 p-2 rounded-xl">
+              📍
+            </div>
+
+            <div>
+              <p class="text-xs uppercase tracking-wider text-gray-400 font-bold">
+                Location
+              </p>
+
+              <p class="text-gray-700 font-medium leading-relaxed">
+                <%= motel.address %>
+              </p>
+            </div>
+
+          </div>
+
+          <!-- Description -->
+          <p class="text-gray-500 text-sm leading-relaxed line-clamp-2 min-h-[44px]">
+            <%= motel.description.presence || "Experience comfortable stays with premium hospitality and modern amenities." %>
+          </p>
+
+          <!-- Footer -->
+          <div class="flex items-end justify-between mt-7">
+
+            <!-- Pricing -->
+            <div>
+
+              <p class="text-xs uppercase tracking-widest text-gray-400 font-bold mb-1">
+                Starting At
+              </p>
+
+              <div class="flex items-end gap-1">
+
+                <span class="text-3xl font-black text-blue-600">
+                  ₹<%= motel.rooms.minimum(:price)&.to_i || "2999" %>
+                </span>
+
+                <span class="text-sm text-gray-400 mb-1">
+                  / night
+                </span>
+
+              </div>
+
+            </div>
+
+            <!-- CTA -->
+            <%= link_to motel,
+              class: "group/button inline-flex items-center gap-2 bg-gray-900 hover:bg-black text-white px-5 py-3 rounded-2xl shadow-lg transition-all duration-300 hover:scale-105" do %>
+
+              <span class="text-sm font-bold">
+                View
+              </span>
+
+              <span class="transition-transform duration-300 group-hover/button:translate-x-1">
+                →
+              </span>
+
+            <% end %>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    <% end %>
+
+  </div>
+
 </div>
