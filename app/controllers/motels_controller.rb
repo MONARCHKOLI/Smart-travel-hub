@@ -65,6 +65,6 @@ class MotelsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def motel_params
-      params.expect(motel: [ :name, :address, :lat, :lon, :description, :image ])
+      params.expect(motel: [ :name, :address, :lat, :lon, :description, :amount, :image ])
     end
 end

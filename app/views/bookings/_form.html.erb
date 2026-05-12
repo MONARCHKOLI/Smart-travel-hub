@@ -1,9 +1,8 @@
-<%= form_with(model: booking, class: "contents") do |form| %>
+<%= form_with(model: booking, class: "space-y-8") do |form| %>
   <% if booking.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
-      <h2><%= pluralize(booking.errors.count, "error") %> prohibited this booking from being saved:</h2>
-
-      <ul class="list-disc ml-6">
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-4 py-3 font-medium rounded-2xl border border-red-100">
+      <h2 class="font-bold"><%= pluralize(booking.errors.count, "error") %> prevented this booking:</h2>
+      <ul class="list-disc ml-6 text-sm">
         <% booking.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,37 +10,72 @@
     </div>
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :user_id %>
-    <%= form.text_field :user_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": booking.errors[:user_id].none?, "border-red-400 focus:outline-red-600": booking.errors[:user_id].any?}] %>
+  <%# Hidden Fields passed from the selection flow %>
+  <%= form.hidden_field :user_id, value: current_user.id %>
+  <%= form.hidden_field :room_id, value: @room.id %>
+  <%= form.hidden_field :status, value: 'pending' %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <%# Section 1: Arrival (Check-in) %>
+    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+      <label class="block text-gray-700 font-bold mb-3 flex items-center gap-2">
+        🕒 Arrival (Check-in)
+      </label>
+      <%= form.datetime_field :check_in, 
+          class: "block w-full rounded-xl border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+          required: true %>
+      <p class="text-[10px] text-gray-400 mt-2 italic">* Food will be prepared 15m before this time.</p>
+    </div>
+
+    <%# Section 2: Departure (Check-out) %>
+    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+      <label class="block text-gray-700 font-bold mb-3">
+        👋 Departure (Check-out)
+      </label>
+      <%= form.datetime_field :check_out, 
+          class: "block w-full rounded-xl border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+          required: true %>
+    </div>
   </div>
 
-  <div class="my-5">
-    <%= form.label :room_id %>
-    <%= form.text_field :room_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": booking.errors[:room_id].none?, "border-red-400 focus:outline-red-600": booking.errors[:room_id].any?}] %>
+  <%# Section 3: Food Pre-order %>
+  <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+    <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+      🍔 Pre-order Arrival Meal
+    </h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <% @motel.food_items.each do |item| %>
+        <label class="flex items-center p-4 border border-gray-100 rounded-2xl cursor-pointer hover:bg-blue-50 transition group">
+          <input type="checkbox" name="booking[food_item_ids][]" value="<%= item.id %>" class="rounded text-blue-600 mr-4 focus:ring-blue-500">
+          <div class="flex-grow">
+            <p class="font-bold text-gray-800 group-hover:text-blue-700"><%= item.name %></p>
+            <p class="text-xs text-gray-400 font-medium">$<%= item.price.to_i %> • <%= item.prep_time_minutes %>m prep</p>
+          </div>
+        </label>
+      <% end %>
+    </div>
   </div>
 
-  <div class="my-5">
-    <%= form.label :check_in %>
-    <%= form.datetime_field :check_in, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": booking.errors[:check_in].none?, "border-red-400 focus:outline-red-600": booking.errors[:check_in].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :check_out %>
-    <%= form.datetime_field :check_out, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": booking.errors[:check_out].none?, "border-red-400 focus:outline-red-600": booking.errors[:check_out].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :status %>
-    <%= form.text_field :status, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": booking.errors[:status].none?, "border-red-400 focus:outline-red-600": booking.errors[:status].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :deposit_amount %>
-    <%= form.text_field :deposit_amount, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": booking.errors[:deposit_amount].none?, "border-red-400 focus:outline-red-600": booking.errors[:deposit_amount].any?}] %>
-  </div>
-
-  <div class="inline">
-    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  <%# Section 4: Payment Summary %>
+  <div class="bg-gray-900 p-8 rounded-3xl text-white shadow-2xl">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <p class="text-gray-400 text-sm font-bold uppercase tracking-wider">Required Deposit (20%)</p>
+        <div class="flex items-baseline gap-1">
+          <span class="text-3xl font-black text-blue-400">$</span>
+          <%= form.text_field :deposit_amount, 
+              value: (@room.price * 0.2).to_i,
+              readonly: true,
+              class: "bg-transparent border-none p-0 text-3xl font-black text-blue-400 w-24 focus:ring-0" %>
+        </div>
+      </div>
+      <div class="text-right">
+        <p class="text-gray-400 text-sm">Total for Stay</p>
+        <p class="text-xl font-bold">$<%= @room.price.to_i %></p>
+      </div>
+    </div>
+    
+    <%= form.submit "Secure Booking & Order Food", 
+        class: "w-full bg-blue-600 hover:bg-blue-500 transition duration-300 text-white py-4 rounded-2xl font-bold shadow-lg active:scale-95 cursor-pointer text-center" %>
   </div>
 <% end %>

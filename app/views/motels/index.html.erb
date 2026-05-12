@@ -125,7 +125,7 @@
               <div class="flex items-end gap-1">
 
                 <span class="text-3xl font-black text-blue-600">
-                  ₹<%= motel.rooms.minimum(:price)&.to_i || "2999" %>
+                  ₹<%= motel.amount&.to_i || "2999" %>
                 </span>
 
                 <span class="text-sm text-gray-400 mb-1">
