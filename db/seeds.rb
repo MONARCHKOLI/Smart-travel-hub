@@ -57,6 +57,18 @@ motels.each do |data|
     filename: "#{motel.name.parameterize}.jpg"
   )
 
+  motel.rooms.create!([
+    { room_type: "Deluxe King", price: 150.0, status: "available" },
+    { room_type: "Executive Suite", price: 250.0, status: "available" },
+    { room_type: "Standard Twin", price: 90.0, status: "available" }
+  ])
+
+  motel.food_items.create!([
+    { name: "Breakfast Club Sandwich", price: 12.0, prep_time_minutes: 10 },
+    { name: "Classic Beef Burger", price: 18.0, prep_time_minutes: 15 },
+    { name: "Fresh Garden Salad", price: 10.0, prep_time_minutes: 8 }
+  ])
+
   puts "✅ Created #{motel.name}"
 
 end

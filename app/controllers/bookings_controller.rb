@@ -12,7 +12,15 @@ class BookingsController < ApplicationController
 
   # GET /bookings/new
   def new
-    @booking = Booking.new
+    if params[:room_id].present?
+      @room = Room.find(params[:room_id])
+      @motel = @room.motel
+      @booking = Booking.new(room: @room)
+      @food_items = @motel.food_items
+    else
+      # Redirect if someone tries to access /bookings/new directly
+      redirect_to motels_path, alert: "Please select a room first to start your booking."
+    end
   end
 
   # GET /bookings/1/edit
@@ -65,6 +73,10 @@ class BookingsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def booking_params
-      params.expect(booking: [ :user_id, :room_id, :check_in, :check_out, :status, :deposit_amount ])
+      # We add food_item_ids: [] to allow the array of selected meals
+      params.expect(booking: [ 
+        :user_id, :room_id, :check_in, :check_out, 
+        :status, :deposit_amount, food_item_ids: [] 
+      ])
     end
 end
