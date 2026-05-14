@@ -1,15 +1,226 @@
-<% content_for :title, "Showing booking" %>
+<!-- Body -->
+<div class="px-6 sm:px-10 py-8 space-y-8">
 
-<div class="md:w-2/3 w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
-  <% end %>
+  <!-- Dining Space -->
+  <div class="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm">
 
-  <h1 class="font-bold text-4xl">Showing booking</h1>
+    <div class="grid lg:grid-cols-2">
 
-  <%= render @booking %>
+      <!-- Image -->
+      <div>
 
-  <%= link_to "Edit this booking", edit_booking_path(@booking), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= link_to "Back to bookings", bookings_path, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= button_to "Destroy this booking", @booking, method: :delete, form_class: "sm:inline-block mt-2 sm:mt-0 sm:ml-2", class: "w-full rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
+        <% if @booking.room.image.attached? %>
+
+          <%= image_tag @booking.room.image,
+            class: "w-full h-full min-h-[320px] object-cover" %>
+
+        <% else %>
+
+          <div class="h-full min-h-[320px] bg-gray-100 flex items-center justify-center text-6xl">
+            🍽
+          </div>
+
+        <% end %>
+
+      </div>
+
+      <!-- Content -->
+      <div class="p-8 flex flex-col justify-center">
+
+        <span class="inline-flex w-fit items-center gap-2 bg-orange-100 text-orange-700 px-4 py-2 rounded-full text-xs font-bold uppercase">
+          Premium Dining Space
+        </span>
+
+        <h2 class="mt-5 text-4xl font-black text-gray-900">
+          <%= @booking.room.room_type %>
+        </h2>
+
+        <div class="grid grid-cols-2 gap-5 mt-8">
+
+          <div class="bg-gray-50 rounded-2xl p-4">
+
+            <p class="text-xs uppercase text-gray-400 font-bold">
+              Reservation Time
+            </p>
+
+            <p class="mt-2 font-bold text-gray-800">
+              <%= @booking.reservation_time.strftime("%d %b %Y, %I:%M %p") rescue @booking.check_in.strftime("%d %b %Y, %I:%M %p") %>
+            </p>
+
+          </div>
+
+          <div class="bg-gray-50 rounded-2xl p-4">
+
+            <p class="text-xs uppercase text-gray-400 font-bold">
+              Guests
+            </p>
+
+            <p class="mt-2 font-bold text-gray-800">
+              <%= @booking.guest_count || 2 %>
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Food Orders -->
+  <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+
+    <div class="px-8 py-6 border-b border-gray-100">
+
+      <div class="flex items-center gap-3">
+
+        <div class="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center">
+          🍔
+        </div>
+
+        <div>
+
+          <h3 class="text-2xl font-black text-gray-900">
+            Food Orders
+          </h3>
+
+          <p class="text-gray-500 text-sm">
+            Meals selected for your reservation
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="p-8">
+
+      <% if @booking.food_orders.any? %>
+
+        <div class="grid md:grid-cols-2 gap-5">
+
+          <% @booking.food_orders.each do |order| %>
+
+            <% item = order.food_item %>
+
+            <div class="border border-gray-100 rounded-3xl overflow-hidden hover:shadow-xl transition">
+
+              <% if item.image.attached? %>
+
+                <%= image_tag item.image,
+                  class: "w-full h-48 object-cover" %>
+
+              <% end %>
+
+              <div class="p-5">
+
+                <div class="flex justify-between items-start">
+
+                  <div>
+
+                    <h4 class="font-black text-xl text-gray-900">
+                      <%= item.name %>
+                    </h4>
+
+                    <p class="text-gray-500 text-sm mt-2">
+                      Prep Time:
+                      <%= item.prep_time_minutes %> mins
+                    </p>
+
+                  </div>
+
+                  <div class="text-right">
+
+                    <p class="text-2xl font-black text-orange-600">
+                      ₹<%= item.price.to_i %>
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          <% end %>
+
+        </div>
+
+      <% else %>
+
+        <div class="text-center py-10">
+
+          <div class="text-6xl mb-4">
+            🍽
+          </div>
+
+          <h4 class="text-xl font-bold text-gray-700">
+            No meals selected
+          </h4>
+
+          <p class="text-gray-500 mt-2">
+            You can still add food before reservation time.
+          </p>
+
+        </div>
+
+      <% end %>
+
+    </div>
+
+  </div>
+
+  <!-- Payment -->
+  <div class="bg-gray-900 rounded-3xl p-8 text-white shadow-xl">
+
+    <% total = @booking.room.price.to_i %>
+    <% deposit = @booking.deposit_amount.to_i %>
+    <% remaining = total - deposit %>
+
+    <div class="grid md:grid-cols-3 gap-5">
+
+      <div class="bg-white/5 rounded-2xl p-5">
+
+        <p class="text-sm text-gray-400 uppercase font-bold">
+          Total Amount
+        </p>
+
+        <h3 class="text-3xl font-black mt-3">
+          ₹<%= total %>
+        </h3>
+
+      </div>
+
+      <div class="bg-orange-500 rounded-2xl p-5">
+
+        <p class="text-sm text-orange-100 uppercase font-bold">
+          Paid Deposit
+        </p>
+
+        <h3 class="text-3xl font-black mt-3">
+          ₹<%= deposit %>
+        </h3>
+
+      </div>
+
+      <div class="bg-white/5 rounded-2xl p-5">
+
+        <p class="text-sm text-gray-400 uppercase font-bold">
+          Remaining
+        </p>
+
+        <h3 class="text-3xl font-black mt-3 text-green-400">
+          ₹<%= remaining %>
+        </h3>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </div>

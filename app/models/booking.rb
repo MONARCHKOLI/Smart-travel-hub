@@ -9,7 +9,20 @@ class Booking < ApplicationRecord
 
   after_create :create_food_orders
 
+  validate :check_out_after_check_in
+
   private
+
+  def check_out_after_check_in
+    return if reservation_time.blank?
+
+    if reservation_time <= DateTime.now
+      errors.add(
+        :reservation_time,
+        "must be later than arrival/check-in time"
+      )
+    end
+  end
 
   def create_food_orders
     return if food_item_ids.blank?
