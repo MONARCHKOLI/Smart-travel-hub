@@ -25,6 +25,9 @@ class BookingsController < ApplicationController
 
   # GET /bookings/1/edit
   def edit
+    @room = @booking.room
+    @motel = @room.motel
+    @food_items = @motel.food_items
   end
 
   # POST /bookings or /bookings.json
@@ -75,7 +78,7 @@ class BookingsController < ApplicationController
     def booking_params
       # We add food_item_ids: [] to allow the array of selected meals
       params.expect(booking: [ 
-        :user_id, :room_id, :check_in, :check_out, 
+        :user_id, :room_id, :reservation_time, :guest_count,
         :status, :deposit_amount, food_item_ids: [] 
       ])
     end
