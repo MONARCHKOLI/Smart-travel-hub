@@ -8,4 +8,71 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
-@import "tailwindcss";
+@layer components {
+
+  .page,
+  .next,
+  .prev,
+  .first,
+  .last {
+
+    @apply
+    inline-flex
+    items-center
+    justify-center
+    px-4
+    py-2
+    mx-1
+    rounded-2xl
+    bg-white
+    shadow-md
+    text-gray-700
+    min-w-[42px]
+    transition
+    hover:shadow-lg
+    hover:-translate-y-0.5;
+
+  }
+
+  .current {
+
+    @apply
+    inline-flex
+    items-center
+    justify-center
+    px-4
+    py-2
+    mx-1
+    rounded-2xl
+    bg-blue-600
+    text-white
+    shadow-lg
+    min-w-[42px];
+
+  }
+
+
+  /* Mobile */
+
+  @media (max-width:640px){
+
+    .page,
+    .next,
+    .prev,
+    .first,
+    .last,
+    .current{
+
+      @apply
+      px-3
+      py-2
+      mx-[2px]
+      text-sm
+      rounded-xl
+      min-w-[36px];
+
+    }
+
+  }
+
+}

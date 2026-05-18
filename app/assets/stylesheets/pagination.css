@@ -1,0 +1,29 @@
+.page,
+.next,
+.prev,
+.first,
+.last{
+
+padding:12px 18px;
+margin:0 6px;
+
+border-radius:16px;
+
+background:white;
+
+box-shadow:
+0 4px 12px rgba(0,0,0,.08);
+
+}
+
+.current{
+
+background:#2563eb;
+
+color:white;
+
+padding:12px 18px;
+
+border-radius:16px;
+
+}

@@ -1,0 +1,72 @@
+<div style="font-family:Arial;max-width:600px;margin:auto;padding:20px">
+
+  <h1 style="color:#f97316">
+    Reservation Request 🍽
+  </h1>
+
+  <p>
+    Reservation #<%= @booking.id %> has been created.
+  </p>
+
+  <hr>
+
+  <p>
+    <strong>Dining Space:</strong>
+    <%= @room.room_type %>
+  </p>
+
+  <p>
+    <strong>Guests:</strong>
+    <%= @booking.guest_count %>
+  </p>
+
+  <p>
+    <strong>Time:</strong>
+
+    <%= @booking.reservation_time.strftime("%d %b %Y %I:%M %p") %>
+  </p>
+
+  <br>
+
+  <table cellspacing="0" cellpadding="0">
+
+    <tr>
+
+      <td>
+
+        <%= link_to "Confirm Reservation",
+        confirm_booking_url(@booking),
+        style: "
+          background:#16a34a;
+          color:white;
+          padding:14px 24px;
+          border-radius:8px;
+          text-decoration:none;
+          font-weight:bold;
+          display:inline-block;" %>
+
+      </td>
+
+      <td width="15"></td>
+
+      <td>
+
+        
+        <%= link_to "Reject",
+            reject_booking_url(@booking),
+            style: "
+              background:#dc2626;
+              color:white;
+              padding:14px 24px;
+              border-radius:8px;
+              text-decoration:none;
+              font-weight:bold;
+              display:inline-block;" %>
+
+      </td>
+
+    </tr>
+
+  </table>
+
+</div>

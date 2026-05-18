@@ -5,14 +5,25 @@ Rails.application.routes.draw do
   
   root "home#index"
 
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
+
   unauthenticated do
     root "devise/sessions#new", as: :unauthenticated_root
   end
 
   resources :food_orders
+
   resources :food_items
-  resources :bookings
+  
+  resources :bookings do
+    member do
+      get :confirm
+      get :reject
+    end
+  end
+  
   resources :rooms
+  
   resources :motels
 
   # Health check

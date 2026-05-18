@@ -1,83 +1,156 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
   <!-- Header -->
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 mb-10">
+  <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-10">
 
     <div>
+
       <h1 class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">
-        Explore Motels
+        Explore Restaurants
       </h1>
 
-      <p class="text-gray-500 mt-2 text-base">
-        Discover premium stays with smart travel experiences.
+      <p class="text-gray-500 mt-3 text-base">
+        Discover premium dining experiences and reserve your perfect table.
       </p>
+
+      <div class="mt-4 inline-flex items-center bg-blue-50 text-blue-700 px-4 py-2 rounded-2xl text-sm font-bold">
+
+        🍽 <%= @motels.total_count rescue @motels.count %> Places Available
+
+      </div>
+
     </div>
 
     <% if user_signed_in? %>
+
       <%= link_to 'Add New Motel',
         new_motel_path,
-        class: "inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 transition duration-300 text-white px-6 py-3 rounded-2xl text-sm font-bold shadow-xl hover:shadow-2xl hover:-translate-y-0.5" %>
+        class: "
+        inline-flex items-center justify-center gap-2
+        bg-blue-600 hover:bg-blue-700
+        text-white px-6 py-3 rounded-2xl
+        text-sm font-bold shadow-xl
+        transition hover:-translate-y-1
+        " %>
+
     <% end %>
 
   </div>
 
+
+  <!-- Live Search -->
+
+  <div class="mb-10">
+
+    <%= form_with url: motels_path,
+        method: :get,
+        local: true,
+        id:"motel-search-form" do |f| %>
+
+      <div class="relative max-w-3xl">
+
+        <%= f.text_field :query,
+            value: params[:query],
+            autocomplete:"off",
+            id:"motel-search-input",
+            placeholder:"Search restaurant, city, location...",
+            class:"
+            w-full
+            bg-white
+            border border-gray-200
+            rounded-3xl
+            pl-14
+            pr-28
+            py-5
+            shadow-lg
+            focus:ring-2
+            focus:ring-blue-500
+            focus:outline-none
+            text-gray-700
+            " %>
+
+        <div class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400">
+
+          🔍
+
+        </div>
+
+        <% if params[:query].present? %>
+
+          <%= link_to "✕",
+            motels_path,
+            class:"
+            absolute
+            right-5
+            top-1/2
+            -translate-y-1/2
+            text-gray-400
+            hover:text-red-500
+            text-lg
+            font-bold
+            " %>
+
+        <% end %>
+
+      </div>
+
+    <% end %>
+
+  </div>
+
+
+
   <!-- Motel Grid -->
+
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
 
     <% @motels.each do |motel| %>
 
       <div class="group bg-white/80 backdrop-blur-xl rounded-[28px] overflow-hidden border border-gray-100 shadow-md hover:shadow-2xl transition-all duration-500">
 
-        <!-- Image -->
-        <div class="relative h-60 overflow-hidden">
+        <div class="relative h-64 overflow-hidden">
 
           <% if motel.image.attached? %>
 
             <%= image_tag motel.image,
-              class: "w-full h-full object-cover group-hover:scale-110 transition duration-700" %>
+            class:"
+            w-full h-full object-cover
+            group-hover:scale-110
+            transition duration-700
+            " %>
 
           <% else %>
 
-            <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-              <span class="text-5xl">
-                🏨
-              </span>
+            <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+
+              <span class="text-6xl">🍽</span>
+
             </div>
 
           <% end %>
 
-          <!-- Overlay -->
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20"></div>
 
-          <!-- Motel Name -->
           <div class="absolute bottom-5 left-5 right-5">
 
-            <h2 class="text-white text-2xl font-black leading-tight drop-shadow-lg">
+            <h2 class="text-white text-2xl font-black">
+
               <%= motel.name %>
+
             </h2>
 
           </div>
 
-          <!-- Weather -->
-          <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-2 rounded-2xl shadow-lg border border-white/50 flex items-center gap-2">
+          <div class="absolute top-4 right-4 bg-white/90 px-3 py-2 rounded-2xl shadow flex gap-2 items-center">
 
-            <span class="text-sm">
-              🌤️
-            </span>
+            🌤️
 
-            <span class="text-xs font-bold text-gray-800">
+            <span class="text-xs font-bold">
 
-              <% if @weather.present? &&
-                    @weather["hours"].present? &&
-                    @weather["hours"][0].present? %>
-
-                <%= @weather.dig("hours", 0, "airTemperature", "noaa").round %>°C
-
-              <% else %>
-
-                24°C
-
-              <% end %>
+              <%= @weather&.dig(
+                "hours",0,
+                "airTemperature","noaa"
+              )&.round || 24 %>°C
 
             </span>
 
@@ -85,68 +158,69 @@
 
         </div>
 
-        <!-- Content -->
         <div class="p-6">
 
-          <!-- Address -->
-          <div class="flex items-start gap-3 mb-5">
+          <div class="flex gap-3 mb-5">
 
             <div class="bg-red-50 p-2 rounded-xl">
+
               📍
+
             </div>
 
             <div>
+
               <p class="text-xs uppercase tracking-wider text-gray-400 font-bold">
+
                 Location
+
               </p>
 
-              <p class="text-gray-700 font-medium leading-relaxed">
+              <p class="text-gray-700 font-medium">
+
                 <%= motel.address %>
+
               </p>
+
             </div>
 
           </div>
 
-          <!-- Description -->
-          <p class="text-gray-500 text-sm leading-relaxed line-clamp-2 min-h-[44px]">
-            <%= motel.description.presence || "Experience comfortable stays with premium hospitality and modern amenities." %>
+          <p class="text-gray-500 text-sm line-clamp-2 min-h-[44px]">
+
+            <%= motel.description.presence ||
+              "Premium dining experience with smart reservations." %>
+
           </p>
 
-          <!-- Footer -->
-          <div class="flex items-end justify-between mt-7">
+          <div class="flex justify-between items-end mt-7">
 
-            <!-- Pricing -->
             <div>
 
-              <p class="text-xs uppercase tracking-widest text-gray-400 font-bold mb-1">
+              <p class="text-xs uppercase text-gray-400 font-bold">
+
                 Starting At
+
               </p>
 
-              <div class="flex items-end gap-1">
+              <span class="text-3xl font-black text-blue-600">
 
-                <span class="text-3xl font-black text-blue-600">
-                  ₹<%= motel.amount&.to_i || "2999" %>
-                </span>
+                ₹<%= motel.amount.to_i %>
 
-                <span class="text-sm text-gray-400 mb-1">
-                  / night
-                </span>
-
-              </div>
+              </span>
 
             </div>
 
-            <!-- CTA -->
             <%= link_to motel,
-              class: "group/button inline-flex items-center gap-2 bg-gray-900 hover:bg-black text-white px-5 py-3 rounded-2xl shadow-lg transition-all duration-300 hover:scale-105" do %>
+            class:"
+            inline-flex items-center gap-2
+            bg-gray-900 hover:bg-black
+            text-white px-5 py-3 rounded-2xl
+            font-bold shadow-lg
+            transition hover:scale-105
+            " do %>
 
-              <span class="text-sm font-bold">
-                View
-              </span>
-
-              <span class="transition-transform duration-300 group-hover/button:translate-x-1">
-                →
-              </span>
+              View →
 
             <% end %>
 
@@ -160,4 +234,74 @@
 
   </div>
 
+
+  <!-- Pagination -->
+              
+  <% if @motels.respond_to?(:total_pages) && @motels.total_pages > 1 %>
+              
+    <div class="mt-14 flex justify-center px-4">
+              
+      <div class="
+        bg-white
+        w-full sm:w-auto
+        max-w-full
+        px-3 sm:px-6
+        py-3 sm:py-4
+        rounded-2xl sm:rounded-3xl
+        shadow-xl
+        overflow-x-auto
+      ">
+              
+        <div class="flex justify-center min-w-max">
+              
+          <%= paginate @motels %>
+              
+        </div>
+              
+      </div>
+              
+    </div>
+              
+  <% end %>
+
 </div>
+
+
+
+<script>
+document.addEventListener("turbo:load", () => {
+
+  const input =
+    document.getElementById(
+      "motel-search-input"
+    )
+
+  const form =
+    document.getElementById(
+      "motel-search-form"
+    )
+
+  if(!input || !form) return
+
+  if(input.dataset.bound) return
+
+  input.dataset.bound="true"
+
+  let timer
+
+  input.addEventListener(
+    "input",
+    ()=>{
+
+      clearTimeout(timer)
+
+      timer=setTimeout(()=>{
+
+        form.requestSubmit()
+
+      },500)
+
+    })
+
+})
+</script>

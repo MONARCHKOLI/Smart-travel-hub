@@ -1,201 +1,135 @@
-<%= form_with(model: @booking, class: "space-y-8") do |form| %>
+<% content_for :title, "New Reservation" %>
 
-  <% if @booking.errors.any? %>
+<div class="min-h-screen py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
 
-    <div class="bg-red-50 border border-red-100 rounded-2xl p-5">
-
-      <div class="flex items-center gap-3 mb-3">
-
-        <div class="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center text-red-600">
-          ⚠️
-        </div>
-
-        <h2 class="text-lg font-bold text-red-600">
-          <%= pluralize(@booking.errors.count, "error") %> prevented this reservation
-        </h2>
-
-      </div>
-
-      <ul class="space-y-1 text-sm text-red-500 ml-2">
-
-        <% @booking.errors.each do |error| %>
-
-          <li>
-            • <%= error.full_message %>
-          </li>
-
-        <% end %>
-
-      </ul>
-
-    </div>
-
-  <% end %>
-
-  <!-- Hidden Fields -->
-  <%= form.hidden_field :user_id, value: current_user.id %>
-  <%= form.hidden_field :room_id, value: @room.id %>
-  <%= form.hidden_field :status, value: "pending" %>
-
-  <!-- Reservation Info -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-    <!-- Reservation Time -->
-    <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
-
-      <div class="flex items-center gap-3 mb-5">
-
-        <div class="w-12 h-12 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center text-xl">
-          🍽
-        </div>
-
-        <div>
-
-          <h3 class="text-lg font-bold text-gray-900 dark:text-white">
-            Reservation Time
-          </h3>
-
-          <p class="text-sm text-gray-500 dark:text-gray-400">
-            Choose your dining slot
-          </p>
-
-        </div>
-
-      </div>
-
-      <%= form.datetime_field :reservation_time,
-        class: "w-full rounded-2xl border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-orange-500",
-        required: true,
-        min: Time.current.strftime('%Y-%m-%dT%H:%M') %>
-
-    </div>
-
-    <!-- Guests -->
-    <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
-
-      <div class="flex items-center gap-3 mb-5">
-
-        <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl">
-          👥
-        </div>
-
-        <div>
-
-          <h3 class="text-lg font-bold text-gray-900 dark:text-white">
-            Guests
-          </h3>
-
-          <p class="text-sm text-gray-500 dark:text-gray-400">
-            Number of people
-          </p>
-
-        </div>
-
-      </div>
-
-      <%= form.number_field :guest_count,
-        min: 1,
-        max: 20,
-        value: 2,
-        required: true,
-        class: "w-full rounded-2xl border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
-
-    </div>
-
-  </div>
-
-  <!-- Selected Table -->
-  <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
-
-    <div class="grid grid-cols-1 lg:grid-cols-3">
-
-      <!-- Image -->
-      <div class="lg:col-span-1">
-
-        <% if @room.image.attached? %>
-
-          <%= image_tag @room.image,
-            class: "w-full h-full object-cover lg:min-h-[280px]" %>
-
-        <% end %>
-
-      </div>
-
-      <!-- Content -->
-      <div class="lg:col-span-2 p-8 flex flex-col justify-between">
-
-        <div>
-
-          <span class="inline-flex items-center gap-2 bg-orange-100 text-orange-700 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide">
-            Premium Dining Space
-          </span>
-
-          <h2 class="mt-5 text-3xl font-black text-gray-900 dark:text-white">
-            <%= @room.room_type %>
-          </h2>
-
-          <p class="mt-4 text-gray-500 dark:text-gray-400 leading-relaxed">
-            Enjoy curated ambience, chef-crafted meals,
-            and a luxury dine-in experience.
-          </p>
-
-        </div>
-
-        <div class="flex items-end justify-between mt-8">
-
-          <div>
-
-            <p class="text-sm uppercase tracking-widest text-gray-400 font-bold">
-              Reservation Price
-            </p>
-
-            <h3 class="mt-2 text-4xl font-black text-orange-600">
-              ₹<%= @room.price.to_i %>
-            </h3>
-
-          </div>
-
-          <div class="flex gap-3">
-
-            <span class="bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 dark:text-gray-300">
-              🍷 Fine Dining
-            </span>
-
-            <span class="bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 dark:text-gray-300">
-              ⚡ Instant
-            </span>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- Food -->
-  <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm">
+  <div class="max-w-7xl mx-auto">
 
     <!-- Header -->
-    <div class="px-8 py-6 border-b border-gray-100 dark:border-gray-800">
+    <div class="mb-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
 
-      <div class="flex items-center gap-3">
+      <div>
 
-        <div class="w-12 h-12 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center text-xl">
-          🍔
+        <span class="inline-flex items-center gap-2 bg-orange-100 text-orange-700 px-4 py-2 rounded-full text-sm font-bold">
+          🍽 Smart Reservation
+        </span>
+
+        <h1 class="mt-4 text-4xl md:text-5xl font-black text-gray-900 dark:text-white">
+
+          Reserve Your Table
+
+        </h1>
+
+        <p class="mt-3 text-gray-500 dark:text-gray-400 max-w-2xl">
+
+          Reserve premium dining spaces, pre-order meals,
+          and enjoy a seamless dine-in experience.
+
+        </p>
+
+      </div>
+
+
+      <%= link_to "← Back",
+          motel_path(@room.motel),
+          class:"
+          inline-flex
+          items-center
+          justify-center
+          bg-white
+          dark:bg-gray-900
+          border
+          border-gray-200
+          dark:border-gray-800
+          px-6
+          py-3
+          rounded-2xl
+          font-bold
+          shadow-sm
+          hover:shadow-lg
+          transition
+          " %>
+
+    </div>
+
+
+    <!-- Form Container -->
+
+    <div class="relative">
+
+      <!-- background effects -->
+
+      <div class="
+      absolute
+      -top-10
+      -right-10
+      w-64
+      h-64
+      bg-orange-200
+      blur-3xl
+      opacity-20
+      rounded-full
+      -z-10
+      "></div>
+
+
+      <div class="
+      absolute
+      -bottom-10
+      -left-10
+      w-64
+      h-64
+      bg-pink-200
+      blur-3xl
+      opacity-20
+      rounded-full
+      -z-10
+      "></div>
+
+
+      <div class="
+      bg-white/95
+      dark:bg-gray-950
+      backdrop-blur-xl
+      rounded-[36px]
+      border
+      border-gray-100
+      dark:border-gray-800
+      shadow-2xl
+      overflow-hidden
+      ">
+
+        <div class="
+        px-8
+        py-7
+        border-b
+        border-gray-100
+        dark:border-gray-800
+        bg-gradient-to-r
+        from-orange-50
+        to-red-50
+        dark:from-gray-900
+        dark:to-gray-800
+        ">
+
+          <h2 class="text-2xl font-black text-gray-900 dark:text-white">
+
+            Reservation Details
+
+          </h2>
+
+          <p class="text-gray-500 mt-2">
+
+            Fill in your reservation information.
+
+          </p>
+
         </div>
 
-        <div>
 
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
-            Pre-order Meals
-          </h3>
+        <div class="p-6 sm:p-10">
 
-          <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
-            Select dishes before arriving
-          </p>
+          <%= render "form",
+              booking: @booking %>
 
         </div>
 
@@ -203,117 +137,6 @@
 
     </div>
 
-    <!-- Food Grid -->
-    <div class="p-8 grid grid-cols-1 lg:grid-cols-2 gap-5">
-
-      <% @motel.food_items.each do |item| %>
-
-        <label class="group flex gap-4 border border-gray-100 dark:border-gray-800 rounded-3xl p-4 cursor-pointer hover:border-orange-300 hover:bg-orange-50 dark:hover:bg-gray-800 transition">
-
-          <input
-            type="checkbox"
-            name="@booking[food_item_ids][]"
-            value="<%= item.id %>"
-            class="mt-2 rounded text-orange-500 focus:ring-orange-500"
-          >
-
-          <% if item.image.attached? %>
-
-            <%= image_tag item.image,
-              class: "w-24 h-24 object-cover rounded-2xl shadow-sm" %>
-
-          <% end %>
-
-          <div class="flex-1 flex items-center justify-between gap-4">
-
-            <div>
-
-              <h4 class="font-bold text-lg text-gray-900 dark:text-white group-hover:text-orange-600 transition">
-                <%= item.name %>
-              </h4>
-
-              <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                Prep Time: <%= item.prep_time_minutes %> mins
-              </p>
-
-            </div>
-
-            <div class="text-right">
-
-              <p class="text-2xl font-black text-orange-600">
-                ₹<%= item.price.to_i %>
-              </p>
-
-            </div>
-
-          </div>
-
-        </label>
-
-      <% end %>
-
-    </div>
-
   </div>
-
-  <!-- Payment -->
-<!-- Payment -->
-<div class="bg-gray-900 rounded-3xl text-white p-8 shadow-2xl">
-
-  <% total_amount = @room.price.to_i %>
-  <% deposit_amount = (total_amount * 0.2).to_i %>
-  <% remaining_amount = total_amount - deposit_amount %>
-
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-
-    <!-- Total -->
-    <div class="bg-white/5 rounded-2xl p-5 border border-white/10">
-
-      <p class="uppercase tracking-widest text-xs text-gray-400 font-bold">
-        Total Amount
-      </p>
-
-      <h3 class="mt-3 text-3xl font-black text-white">
-        ₹<%= total_amount %>
-      </h3>
-
-    </div>
-
-    <!-- 20% Deposit -->
-    <div class="bg-orange-500 rounded-2xl p-5 shadow-lg">
-
-      <p class="uppercase tracking-widest text-xs text-orange-100 font-bold">
-        Advance Deposit (20%)
-      </p>
-
-      <h3 class="mt-3 text-3xl font-black text-white">
-        ₹<%= deposit_amount %>
-      </h3>
-
-      <%= form.hidden_field :deposit_amount,
-        value: deposit_amount %>
-
-    </div>
-
-    <!-- Remaining -->
-    <div class="bg-white/5 rounded-2xl p-5 border border-white/10">
-
-      <p class="uppercase tracking-widest text-xs text-gray-400 font-bold">
-        Pay at Restaurant
-      </p>
-
-      <h3 class="mt-3 text-3xl font-black text-green-400">
-        ₹<%= remaining_amount %>
-      </h3>
-
-    </div>
-
-  </div>
-
-  <!-- CTA -->
-  <%= form.submit "Reserve Table",
-    class: "w-full bg-orange-500 hover:bg-orange-400 text-white py-4 rounded-2xl text-lg font-bold transition duration-300 cursor-pointer shadow-lg" %>
 
 </div>
-
-<% end %>

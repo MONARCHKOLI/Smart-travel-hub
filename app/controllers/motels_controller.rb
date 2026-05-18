@@ -3,7 +3,8 @@ class MotelsController < ApplicationController
 
   # GET /motels or /motels.json
   def index
-    @motels = Motel.all
+    @motels =
+    Motel.search(params[:query]).page(params[:page]).per(9)
   end
 
   # GET /motels/1 or /motels/1.json
