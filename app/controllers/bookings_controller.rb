@@ -3,7 +3,7 @@ class BookingsController < ApplicationController
 
   # GET /bookings or /bookings.json
   def index
-    @bookings = Booking.all
+    @bookings = current_user.bookings.includes(:room).search(params[:query]).by_status(params[:status]).by_guest_count(params[:guests]).order(created_at: :desc).page(params[:page]).per(9)
   end
 
   # GET /bookings/1 or /bookings/1.json
@@ -66,6 +66,24 @@ class BookingsController < ApplicationController
       format.html { redirect_to bookings_path, notice: "Booking was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
+  end
+
+  def confirm
+    @booking = Booking.find(params[:id])
+
+    @booking.update(status: "confirmed")
+
+    redirect_to root_path,
+      notice: "Reservation confirmed"
+  end
+
+  def reject
+    @booking = Booking.find(params[:id])
+
+    @booking.update(status: "rejected")
+
+    redirect_to root_path,
+      alert: "Reservation rejected"
   end
 
   private

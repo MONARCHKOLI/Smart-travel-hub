@@ -1,235 +1,213 @@
-<div class="max-w-7xl mx-auto px-4 py-12">
+<!-- Experience Highlights -->
+<div class="grid md:grid-cols-3 gap-5 mb-12">
 
-  <!-- Restaurant Header -->
-  <div class="relative h-[420px] rounded-[36px] overflow-hidden mb-12 shadow-2xl">
+  <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
+    <div class="text-4xl mb-4">📲</div>
 
-    <% if @motel.image.attached? %>
+    <h3 class="font-black text-xl">
+      Smart Booking
+    </h3>
 
-      <%= image_tag @motel.image,
-        class: "w-full h-full object-cover" %>
-
-    <% end %>
-
-    <!-- Overlay -->
-    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-
-    <!-- Content -->
-    <div class="absolute bottom-10 left-10 text-white max-w-3xl">
-
-      <span class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-sm font-bold mb-5 border border-white/20">
-        🍽 Premium Smart Dining
-      </span>
-
-      <h1 class="text-5xl md:text-6xl font-black leading-tight mb-4">
-        <%= @motel.name %>
-      </h1>
-
-      <p class="text-lg opacity-90 italic flex items-center gap-2">
-        📍 <%= @motel.address %>
-      </p>
-
-      <p class="mt-5 text-white/90 text-lg leading-relaxed max-w-2xl">
-        <%= @motel.description %>
-      </p>
-
-    </div>
-
+    <p class="text-gray-500 mt-2 text-sm">
+      Instant reservation with seamless booking.
+    </p>
   </div>
 
-  <!-- Main Layout -->
-  <div class="grid grid-cols-1 xl:grid-cols-4 gap-10">
+  <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
+    <div class="text-4xl mb-4">🍔</div>
 
-    <!-- Left -->
-    <div class="xl:col-span-3">
+    <h3 class="font-black text-xl">
+      Pre-order Meals
+    </h3>
 
-      <!-- Heading -->
-      <div class="flex items-center justify-between mb-8">
+    <p class="text-gray-500 mt-2 text-sm">
+      Order food before arriving.
+    </p>
+  </div>
 
-        <div>
+  <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
+    <div class="text-4xl mb-4">🌤️</div>
 
-          <h2 class="text-3xl font-black text-gray-900 dark:text-white">
-            Select Your Dining Space
-          </h2>
+    <h3 class="font-black text-xl">
+      Live Weather
+    </h3>
 
-          <p class="text-gray-500 dark:text-gray-300 mt-2">
-            Swipe through premium seating experiences and reserve your table instantly.
-          </p>
-
-        </div>
-
-      </div>
-
-      <!-- Slider -->
-      <div class="relative">
-
-        <div
-          id="rooms-slider"
-          class="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 scrollbar-hide"
-        >
-
-          <% @motel.rooms.each do |room| %>
-
-            <!-- Dining Card -->
-            <div class="min-w-[340px] max-w-[340px] snap-start group">
-
-              <div class="bg-white dark:bg-gray-900 rounded-[32px] shadow-xl overflow-hidden border border-gray-100 dark:border-gray-800 hover:shadow-2xl transition duration-500 h-full">
-
-                <!-- Image -->
-                <div class="relative h-64 overflow-hidden">
-
-                  <% if room.image.attached? %>
-
-                    <%= image_tag room.image,
-                      class: "w-full h-full object-cover group-hover:scale-110 transition duration-700" %>
-
-                  <% else %>
-
-                    <div class="w-full h-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-5xl">
-                      🍽
-                    </div>
-
-                  <% end %>
-
-                  <!-- Overlay -->
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-
-                  <!-- Price -->
-                  <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl shadow-md">
-
-                    <span class="text-blue-600 font-black text-xl">
-                      ₹<%= room.price.to_i %>
-                    </span>
-
-                  </div>
-
-                  <!-- Table Type -->
-                  <div class="absolute bottom-5 left-5 right-5">
-
-                    <h3 class="text-2xl font-black text-white drop-shadow-lg">
-                      <%= room.room_type %>
-                    </h3>
-
-                  </div>
-
-                </div>
-
-                <!-- Content -->
-                <div class="p-6 flex flex-col justify-between">
-
-                  <div>
-
-                    <div class="flex flex-wrap gap-2 mb-5">
-
-                      <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">
-                        Instant Reservation
-                      </span>
-
-                      <span class="bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-bold">
-                        Gourmet Dining
-                      </span>
-
-                    </div>
-
-                    <p class="text-gray-500 dark:text-gray-300 leading-relaxed">
-                      Experience luxury dining with smart reservations,
-                      premium ambience, and chef-crafted meals.
-                    </p>
-
-                  </div>
-
-                  <!-- CTA -->
-                  <div class="mt-7">
-
-                    <%= link_to "Reserve Table",
-                      new_booking_path(room_id: room.id),
-                      class: "w-full inline-flex items-center justify-center bg-gray-900 hover:bg-black text-white px-6 py-4 rounded-2xl font-bold shadow-lg transition duration-300 hover:scale-[1.02]" %>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          <% end %>
-
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- Right Sidebar -->
-    <div class="space-y-6">
-
-      <!-- Smart Reservation -->
-      <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-[32px] border border-blue-100 shadow-lg">
-
-        <div class="text-5xl mb-5">
-          📲
-        </div>
-
-        <h3 class="font-black text-2xl text-blue-900 mb-3">
-          Smart Reservation
-        </h3>
-
-        <p class="text-blue-700 leading-relaxed">
-          Reserve your dining table instantly with Face ID verification,
-          live availability, and seamless smart booking.
-        </p>
-
-      </div>
-
-      <!-- Food -->
-      <div class="bg-white dark:bg-gray-900 rounded-[32px] border border-gray-100 dark:border-gray-800 shadow-lg p-8">
-
-        <div class="text-5xl mb-5">
-          🍔
-        </div>
-
-        <h3 class="font-black text-2xl text-gray-900 dark:text-white mb-3">
-          Pre-order Meals
-        </h3>
-
-        <p class="text-gray-500 dark:text-gray-300 leading-relaxed">
-          Pre-order your meals before arrival and enjoy instant serving
-          once you reach your reserved table.
-        </p>
-
-      </div>
-
-      <!-- Weather -->
-      <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-8 rounded-[32px] border border-purple-100 shadow-lg">
-
-        <div class="text-5xl mb-5">
-          🌤️
-        </div>
-
-        <h3 class="font-black text-2xl text-purple-900 mb-3">
-          Live Weather
-        </h3>
-
-        <p class="text-purple-700 leading-relaxed">
-          Plan your dining experience better with live weather updates
-          and local city conditions.
-        </p>
-
-      </div>
-
-    </div>
-
+    <p class="text-gray-500 mt-2 text-sm">
+      Weather-aware dining experiences.
+    </p>
   </div>
 
 </div>
 
-<style>
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
 
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+<!-- Dining Spaces -->
+<div>
+
+  <div class="flex items-center justify-between mb-8">
+
+    <div>
+
+      <h2 class="text-3xl font-black text-gray-900">
+        Select Dining Space
+      </h2>
+
+      <p class="text-gray-500 mt-2">
+        Choose your experience.
+      </p>
+
+    </div>
+
+    <!-- Slider Controls -->
+    <div class="flex gap-3">
+
+      <button
+        id="slide-left"
+        class="w-12 h-12 rounded-2xl bg-white border border-gray-200 shadow-sm hover:bg-gray-50"
+      >
+        ←
+      </button>
+
+      <button
+        id="slide-right"
+        class="w-12 h-12 rounded-2xl bg-gray-900 text-white shadow-sm hover:bg-black"
+      >
+        →
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- Actual Slider -->
+  <div
+  id="rooms-slider"
+  class="flex gap-8 overflow-x-auto scroll-smooth pb-6 snap-x snap-mandatory no-scrollbar"
+>
+
+  <% @motel.rooms.each do |room| %>
+
+    <div class="min-w-[340px] max-w-[340px] snap-start flex-shrink-0">
+
+      <div class="bg-white rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition duration-500 hover:-translate-y-2 border border-gray-100 h-full">
+
+        <!-- Image -->
+        <div class="relative h-64 overflow-hidden">
+
+          <% if room.image.attached? %>
+
+            <%= image_tag room.image,
+              class:"w-full h-full object-cover hover:scale-110 transition duration-700" %>
+
+          <% else %>
+
+            <div class="w-full h-full bg-gray-100 flex items-center justify-center text-5xl">
+              🍽
+            </div>
+
+          <% end %>
+
+          <!-- price -->
+          <div class="absolute top-4 right-4 bg-white px-4 py-2 rounded-2xl shadow-lg">
+
+            <span class="font-black text-gray-900">
+              ₹<%= room.price.to_i %>
+            </span>
+
+          </div>
+
+          <!-- gradient -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent"></div>
+
+        </div>
+
+        <!-- content -->
+        <div class="p-6 flex flex-col">
+
+          <div>
+
+            <h3 class="text-3xl font-black text-gray-900">
+              <%= room.room_type %>
+            </h3>
+
+            <p class="text-gray-500 mt-3 leading-relaxed min-h-[70px]">
+              Premium dining experience with elegant ambience and curated seating.
+            </p>
+
+          </div>
+
+          <div class="mt-6 flex items-center justify-between">
+
+            <div>
+
+              <p class="text-xs text-gray-400 uppercase">
+                Availability
+              </p>
+
+              <span class="text-green-600 font-bold">
+                Available
+              </span>
+
+            </div>
+
+            <%= link_to "Reserve Table",
+                new_booking_path(room_id: room.id),
+                class:"bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-2xl font-bold whitespace-nowrap shadow-lg transition" %>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  <% end %>
+
+</div>
+
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+
+const slider=
+document.getElementById("rooms-slider")
+
+document
+.getElementById("slide-right")
+.addEventListener("click",()=>{
+
+slider.scrollBy({
+left:380,
+behavior:"smooth"
+})
+
+})
+
+document
+.getElementById("slide-left")
+.addEventListener("click",()=>{
+
+slider.scrollBy({
+left:-380,
+behavior:"smooth"
+})
+
+})
+
+})
+
+</script>
+
+<style>
+.no-scrollbar::-webkit-scrollbar{
+display:none;
+}
+
+.no-scrollbar{
+-ms-overflow-style:none;
+scrollbar-width:none;
+}
 </style>

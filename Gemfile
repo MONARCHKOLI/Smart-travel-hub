@@ -61,6 +61,7 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  gem 'letter_opener_web'
 end
 
 group :test do
@@ -70,3 +71,7 @@ group :test do
 end
 
 gem "devise", "~> 5.0"
+
+gem "faker", "~> 3.8"
+
+gem "kaminari", "~> 1.2"
