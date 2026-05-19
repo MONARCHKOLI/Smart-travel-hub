@@ -1,183 +1,138 @@
+<!-- Top Actions -->
+<div class="px-6 sm:px-10 pt-6">
+  <div class=" flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+    <!-- Left -->
+    <div>
+      <span class=" inline-flex items-center gap-2 bg-orange-100 text-orange-700 px-4 py-2 rounded-full text-sm font-bold">
+        📖 View Reservation
+      </span>
+    </div>
+    <!-- Right -->
+    <div class=" flex flex-col sm:flex-row gap-3">
+      <%= link_to edit_booking_path(@booking),
+        class:" inline-flex items-center justify-center bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-2xl font-bold shadow-lg transition" do %>
+        ✏️ Edit
+      <% end %>
+      <%= link_to bookings_path,
+        class:" inline-flex items-center justify-center bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-2xl font-bold shadow-sm transition" do %>
+        ← Back
+      <% end %>
+    </div>
+  </div>
+</div>
 <!-- Body -->
 <div class="px-6 sm:px-10 py-8 space-y-8">
-
   <!-- Dining Space -->
   <div class="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm">
-
     <div class="grid lg:grid-cols-2">
-
       <!-- Image -->
       <div>
-
         <% if @booking.room.image.attached? %>
-
           <%= image_tag @booking.room.image,
             class: "w-full h-full min-h-[320px] object-cover" %>
-
         <% else %>
-
           <div class="h-full min-h-[320px] bg-gray-100 flex items-center justify-center text-6xl">
             🍽
           </div>
-
         <% end %>
-
       </div>
-
       <!-- Content -->
       <div class="p-8 flex flex-col justify-center">
-
         <span class="inline-flex w-fit items-center gap-2 bg-orange-100 text-orange-700 px-4 py-2 rounded-full text-xs font-bold uppercase">
           Premium Dining Space
         </span>
-
         <h2 class="mt-5 text-4xl font-black text-gray-900">
           <%= @booking.room.room_type %>
         </h2>
-
         <div class="grid grid-cols-2 gap-5 mt-8">
-
           <div class="bg-gray-50 rounded-2xl p-4">
-
             <p class="text-xs uppercase text-gray-400 font-bold">
               Reservation Time
             </p>
-
             <p class="mt-2 font-bold text-gray-800">
               <%= @booking.reservation_time.strftime("%d %b %Y, %I:%M %p") rescue @booking.check_in.strftime("%d %b %Y, %I:%M %p") %>
             </p>
-
           </div>
-
           <div class="bg-gray-50 rounded-2xl p-4">
-
             <p class="text-xs uppercase text-gray-400 font-bold">
               Guests
             </p>
-
             <p class="mt-2 font-bold text-gray-800">
               <%= @booking.guest_count || 2 %>
             </p>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
 
   <!-- Food Orders -->
   <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
-
     <div class="px-8 py-6 border-b border-gray-100">
-
       <div class="flex items-center gap-3">
-
         <div class="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center">
           🍔
         </div>
-
         <div>
-
           <h3 class="text-2xl font-black text-gray-900">
             Food Orders
           </h3>
-
           <p class="text-gray-500 text-sm">
             Meals selected for your reservation
           </p>
-
         </div>
-
       </div>
-
     </div>
-
     <div class="p-8">
-
       <% if @booking.food_orders.any? %>
-
         <div class="grid md:grid-cols-2 gap-5">
-
           <% @booking.food_orders.each do |order| %>
-
             <% item = order.food_item %>
-
             <div class="border border-gray-100 rounded-3xl overflow-hidden hover:shadow-xl transition">
-
               <% if item.image.attached? %>
-
-                <%= image_tag item.image,
-                  class: "w-full h-48 object-cover" %>
-
+                <%= image_tag item.image, class: "w-full h-48 object-cover" %>
               <% end %>
-
               <div class="p-5">
-
                 <div class="flex justify-between items-start">
-
                   <div>
-
                     <h4 class="font-black text-xl text-gray-900">
                       <%= item.name %>
                     </h4>
-
                     <p class="text-gray-500 text-sm mt-2">
                       Prep Time:
                       <%= item.prep_time_minutes %> mins
                     </p>
-
                   </div>
-
                   <div class="text-right">
-
                     <p class="text-2xl font-black text-orange-600">
                       ₹<%= item.price.to_i %>
                     </p>
-
                   </div>
-
                 </div>
-
               </div>
-
             </div>
-
           <% end %>
-
         </div>
-
       <% else %>
-
         <div class="text-center py-10">
-
           <div class="text-6xl mb-4">
             🍽
           </div>
-
           <h4 class="text-xl font-bold text-gray-700">
             No meals selected
           </h4>
-
           <p class="text-gray-500 mt-2">
             You can still add food before reservation time.
           </p>
-
         </div>
-
       <% end %>
-
     </div>
-
   </div>
 
   <!-- Payment -->
   <div class="bg-gray-900 rounded-3xl p-8 text-white shadow-xl">
 
-    <% total = @booking.room.price.to_i %>
+    <% total = @booking.room.price.to_i + FoodItem.where(id: @booking.food_orders.pluck(:food_item_id)).sum(:price).to_i %>
     <% deposit = @booking.deposit_amount.to_i %>
     <% remaining = total - deposit %>
 
